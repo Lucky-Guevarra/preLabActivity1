@@ -1,0 +1,55 @@
+import pydirectinput
+import keyboard
+import threading
+import time
+
+# Flags to control spacebar and movement
+simulate_spacebar = False
+simulate_movement = False
+
+# Function to simulate pressing the spacebar repeatedly
+def press_spacebar():
+    while simulate_spacebar:
+        pydirectinput.press('space')
+
+# Function to alternate between 'a' (left) and 'd' (right) movements every 1 second
+def alternate_movement():
+    while simulate_movement:
+        pydirectinput.press('a')
+        time.sleep(0.5)
+        pydirectinput.press('d')
+        time.sleep(0.5)
+
+# Start the spacebar simulation when 'x' is pressed
+def start_spacebar_simulation(e):
+    global simulate_spacebar
+    simulate_spacebar = True
+    threading.Thread(target=press_spacebar).start()
+
+# Stop the spacebar simulation when 'c' is pressed
+def stop_spacebar_simulation(e):
+    global simulate_spacebar
+    simulate_spacebar = False
+
+# Start alternating left and right movement when 's' is pressed
+def start_alternate_movement(e):
+    global simulate_movement
+    simulate_movement = True
+    threading.Thread(target=alternate_movement).start()
+
+# Stop alternating movement when 's' is released or 'c' is pressed
+def stop_alternate_movement(e):
+    global simulate_movement
+    simulate_movement = False
+
+# Register the hotkeys
+keyboard.on_press_key('x', start_spacebar_simulation)
+keyboard.on_release_key('c', stop_spacebar_simulation)
+keyboard.on_press_key('f', start_alternate_movement)
+keyboard.on_release_key('g', stop_alternate_movement)
+keyboard.add_hotkey('c', stop_alternate_movement)
+
+# Run the program indefinitely
+while True:
+    pass
+  
